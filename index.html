@@ -137,6 +137,7 @@ textarea { resize: none; height: 68px; font-size: 13px; }
     <span>Следующий №: <b id="nextNum">—</b></span>
     <span style="cursor:pointer" onclick="openSheet()">→ открыть таблицу</span>
   </div>
+  <div style="font-size:10px;color:var(--muted);margin-bottom:14px;cursor:pointer" onclick="changeSheetId()">⚙ сменить ID таблицы</div>
 
   <div class="field-group">
     <label>Дата <button class="date-today" onclick="setToday()">сегодня</button></label>
@@ -252,6 +253,8 @@ function signIn() { tokenClient.requestAccessToken({ prompt: '' }); }
 function signOut() {
   if (accessToken) google.accounts.oauth2.revoke(accessToken, () => {});
   accessToken = null;
+  sheetId = '';
+  localStorage.removeItem('kb_sheet_id');
   document.getElementById('userChip').style.display = 'none';
   document.getElementById('logoutBtn').style.display = 'none';
   showScreen('login');
@@ -372,6 +375,15 @@ function setToday() {
 }
 
 function openSheet() {
+function changeSheetId() {
+  const id = prompt("Вставь новый ID таблицы:");
+  if (!id || !id.trim()) return;
+  sheetId = id.trim();
+  localStorage.setItem("kb_sheet_id", sheetId);
+  fetchNextNum();
+  toast("ID таблицы обновлён ✓", "success");
+}
+
   if (sheetId) window.open(`https://docs.google.com/spreadsheets/d/${sheetId}/edit`, '_blank');
 }
 
