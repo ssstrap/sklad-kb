@@ -7,100 +7,82 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Unbounded:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #0d0d0d;
-  --surface: #161616;
-  --surface2: #1f1f1f;
-  --border: #2a2a2a;
-  --accent: #e8c84a;
-  --accent2: #c4a832;
-  --text: #efefef;
-  --muted: #666;
-  --danger: #e05a5a;
-  --success: #4db876;
-  --r: 10px;
+  --bg:#0d0d0d;--surface:#161616;--surface2:#1f1f1f;--border:#2a2a2a;
+  --accent:#e8c84a;--accent2:#c4a832;--text:#efefef;--muted:#666;
+  --danger:#e05a5a;--success:#4db876;--r:10px;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'JetBrains Mono', monospace;
-  min-height: 100dvh;
-  overscroll-behavior: none;
-}
-header {
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  padding: 12px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-.logo { font-family: 'Unbounded', sans-serif; font-size: 13px; font-weight: 700; color: var(--accent); line-height: 1.2; }
-.logo span { display: block; font-size: 9px; color: var(--muted); font-family: 'JetBrains Mono', monospace; font-weight: 400; letter-spacing: 0.1em; margin-top: 2px; }
-.header-right { display: flex; align-items: center; gap: 10px; }
-.user-chip { font-size: 10px; color: var(--muted); background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; padding: 4px 10px; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: none; }
-.logout-btn { font-size: 10px; color: var(--muted); background: none; border: none; cursor: pointer; font-family: inherit; padding: 4px; display: none; }
-.logout-btn:hover { color: var(--danger); }
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospace;min-height:100dvh;overscroll-behavior:none}
 
-#login-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: calc(100dvh - 57px); padding: 32px 24px; text-align: center; }
-.login-icon { font-size: 48px; margin-bottom: 20px; }
-.login-title { font-family: 'Unbounded', sans-serif; font-size: 18px; color: var(--accent); margin-bottom: 8px; }
-.login-sub { color: var(--muted); font-size: 11px; line-height: 1.7; margin-bottom: 32px; max-width: 280px; }
+header{background:var(--surface);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{font-family:'Unbounded',sans-serif;font-size:13px;font-weight:700;color:var(--accent);line-height:1.2}
+.logo span{display:block;font-size:9px;color:var(--muted);font-family:'JetBrains Mono',monospace;font-weight:400;letter-spacing:.1em;margin-top:2px}
+.hright{display:flex;align-items:center;gap:8px}
+.user-chip{font-size:10px;color:var(--muted);background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:4px 10px;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:none}
+.hbtn{font-size:10px;color:var(--muted);background:none;border:1px solid var(--border);border-radius:6px;cursor:pointer;font-family:inherit;padding:4px 8px;display:none}
+.hbtn:hover{color:var(--accent);border-color:var(--accent)}
 
-#sheet-setup { display: none; padding: 24px 16px; max-width: 480px; margin: 0 auto; }
-.setup-title { font-family: 'Unbounded', sans-serif; font-size: 15px; color: var(--accent); margin-bottom: 8px; }
-.setup-desc { color: var(--muted); font-size: 11px; line-height: 1.7; margin-bottom: 20px; }
-.setup-desc code { color: var(--accent); background: var(--surface2); padding: 2px 6px; border-radius: 4px; }
+/* SCREENS */
+.screen{display:none;padding:24px 16px;max-width:480px;margin:0 auto}
+#loading-screen{display:flex;align-items:center;justify-content:center;min-height:calc(100dvh - 57px);color:var(--muted);font-size:12px;gap:10px}
+#login-screen{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:calc(100dvh - 57px);padding:32px 24px;text-align:center}
+#main-screen{display:none;padding:16px;max-width:480px;margin:0 auto;padding-bottom:40px}
 
-#main-screen { display: none; padding: 16px; max-width: 480px; margin: 0 auto; padding-bottom: 40px; }
-.counter-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; font-size: 11px; color: var(--muted); }
-.counter-bar b { color: var(--accent); }
+.screen-title{font-family:'Unbounded',sans-serif;font-size:15px;color:var(--accent);margin-bottom:8px}
+.screen-desc{color:var(--muted);font-size:11px;line-height:1.7;margin-bottom:20px}
+.screen-desc code{color:var(--accent);background:var(--surface2);padding:2px 6px;border-radius:4px}
 
-.field-group { margin-bottom: 13px; }
-label { display: block; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 5px; }
-input, select, textarea { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); color: var(--text); font-family: 'JetBrains Mono', monospace; font-size: 15px; padding: 11px 13px; outline: none; transition: border-color 0.15s; -webkit-appearance: none; }
-input:focus, select:focus, textarea:focus { border-color: var(--accent); }
-select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23666' stroke-width='1.5' stroke-linecap='round' fill='none'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 13px center; padding-right: 34px; }
-select option { background: #161616; }
-textarea { resize: none; height: 68px; font-size: 13px; }
-.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.date-today { font-size: 10px; color: var(--accent); background: none; border: none; cursor: pointer; padding: 0; font-family: inherit; margin-left: 8px; }
+.login-icon{font-size:48px;margin-bottom:20px}
+.login-title{font-family:'Unbounded',sans-serif;font-size:18px;color:var(--accent);margin-bottom:8px}
+.login-sub{color:var(--muted);font-size:11px;line-height:1.7;margin-bottom:32px;max-width:280px}
 
-.submit-btn { width: 100%; background: var(--accent); color: #111; border: none; border-radius: var(--r); font-family: 'Unbounded', sans-serif; font-size: 13px; font-weight: 700; padding: 15px; cursor: pointer; margin-top: 6px; transition: background 0.15s, transform 0.1s; letter-spacing: 0.02em; }
-.submit-btn:active { transform: scale(0.98); background: var(--accent2); }
-.submit-btn:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; transform: none; }
+/* FORM */
+.field-group{margin-bottom:13px}
+label{display:block;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px}
+input,select,textarea{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:15px;padding:11px 13px;outline:none;transition:border-color .15s;-webkit-appearance:none}
+input:focus,select:focus,textarea:focus{border-color:var(--accent)}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23666' stroke-width='1.5' stroke-linecap='round' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;padding-right:34px}
+select option{background:#161616}
+textarea{resize:none;height:68px;font-size:13px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.date-today{font-size:10px;color:var(--accent);background:none;border:none;cursor:pointer;padding:0;font-family:inherit;margin-left:8px}
 
-.google-btn { display: flex; align-items: center; justify-content: center; gap: 12px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); color: var(--text); font-family: 'JetBrains Mono', monospace; font-size: 13px; padding: 14px 24px; cursor: pointer; width: 100%; max-width: 320px; transition: border-color 0.2s, background 0.2s; }
-.google-btn:hover { border-color: var(--accent); background: var(--surface2); }
+.btn{width:100%;background:var(--accent);color:#111;border:none;border-radius:var(--r);font-family:'Unbounded',sans-serif;font-size:13px;font-weight:700;padding:15px;cursor:pointer;margin-top:6px;transition:background .15s,transform .1s;letter-spacing:.02em}
+.btn:active{transform:scale(.98);background:var(--accent2)}
+.btn:disabled{background:var(--border);color:var(--muted);cursor:not-allowed;transform:none}
+.btn-outline{background:none;border:1px solid var(--border);color:var(--muted)}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent)}
 
-.section-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin: 22px 0 10px; }
-.entry-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 11px 13px; margin-bottom: 7px; font-size: 12px; animation: fadeIn 0.3s ease; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: none; } }
-.entry-card .mat { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
-.entry-card .meta { color: var(--muted); font-size: 11px; display: flex; gap: 10px; flex-wrap: wrap; }
-.entry-card .qty { color: var(--accent); font-weight: 600; }
+.google-btn{display:flex;align-items:center;justify-content:center;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:13px;padding:14px 24px;cursor:pointer;width:100%;max-width:320px;transition:border-color .2s,background .2s}
+.google-btn:hover{border-color:var(--accent);background:var(--surface2)}
 
-#toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--surface2); border: 1px solid var(--border); border-radius: 30px; padding: 11px 20px; font-size: 13px; transition: transform 0.25s ease; z-index: 999; white-space: nowrap; max-width: 90vw; overflow: hidden; text-overflow: ellipsis; }
-#toast.show { transform: translateX(-50%) translateY(0); }
-#toast.success { border-color: var(--success); color: var(--success); }
-#toast.error { border-color: var(--danger); color: var(--danger); }
+.counter-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;font-size:11px;color:var(--muted)}
+.counter-bar b{color:var(--accent)}
 
-.spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid #333; border-top-color: #111; border-radius: 50%; animation: spin 0.6s linear infinite; vertical-align: middle; margin-right: 7px; }
-@keyframes spin { to { transform: rotate(360deg); } }
+.section-label{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:22px 0 10px}
+.entry-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:11px 13px;margin-bottom:7px;font-size:12px;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:none}}
+.entry-card .mat{font-size:13px;font-weight:600;margin-bottom:4px}
+.entry-card .meta{color:var(--muted);font-size:11px;display:flex;gap:10px;flex-wrap:wrap}
+.entry-card .qty{color:var(--accent);font-weight:600}
 
-#loading-screen { display: flex; align-items: center; justify-content: center; min-height: calc(100dvh - 57px); color: var(--muted); font-size: 12px; gap: 10px; }
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--surface2);border:1px solid var(--border);border-radius:30px;padding:11px 20px;font-size:13px;transition:transform .25s ease;z-index:999;white-space:nowrap;max-width:90vw;overflow:hidden;text-overflow:ellipsis}
+#toast.show{transform:translateX(-50%) translateY(0)}
+#toast.success{border-color:var(--success);color:var(--success)}
+#toast.error{border-color:var(--danger);color:var(--danger)}
+
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid #333;border-top-color:#111;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:7px}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
 
 <header>
   <div class="logo">СКЛАД КБ <span>Королевские бани · Астана</span></div>
-  <div class="header-right">
+  <div class="hright">
     <div class="user-chip" id="userChip"></div>
-    <button class="logout-btn" id="logoutBtn" onclick="signOut()">выйти</button>
+    <button class="hbtn" id="changeBtn" onclick="showScreen('sheet-setup')">ID таблицы</button>
+    <button class="hbtn" id="logoutBtn" onclick="signOut()">выйти</button>
   </div>
 </header>
 
@@ -109,7 +91,7 @@ textarea { resize: none; height: 68px; font-size: 13px; }
   <span>Загрузка...</span>
 </div>
 
-<div id="login-screen" style="display:none">
+<div id="login-screen">
   <div class="login-icon">📦</div>
   <div class="login-title">Склад КБ</div>
   <div class="login-sub">Журнал приходов материалов.<br>Войди через Google — данные пишутся прямо в таблицу.</div>
@@ -119,36 +101,36 @@ textarea { resize: none; height: 68px; font-size: 13px; }
   </button>
 </div>
 
-<div id="sheet-setup">
-  <div class="setup-title">ID таблицы</div>
-  <div class="setup-desc">
-    Найди в URL таблицы:<br>
-    <code>spreadsheets/d/<b>[ЭТО_ID]</b>/edit</code>
+<div id="sheet-setup" class="screen">
+  <div class="screen-title">ID таблицы</div>
+  <div class="screen-desc">
+    Открой Google Таблицу → скопируй ID из URL:<br>
+    <code>spreadsheets/d/<b>ВОТ_ЭТО</b>/edit</code><br><br>
+    Таблица должна быть сохранена как <b>Google Таблицы</b>, не XLSX.<br>
+    Файл → Сохранить как Google Таблицы.
   </div>
   <div class="field-group">
     <label>Spreadsheet ID</label>
-    <input type="text" id="sheetIdInput" placeholder="1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms" autocomplete="off" autocorrect="off" spellcheck="false">
+    <input type="text" id="sheetIdInput" placeholder="1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off">
   </div>
-  <button class="submit-btn" onclick="saveSheetId()">Продолжить</button>
+  <button class="btn" onclick="saveSheetId()">Сохранить и продолжить</button>
+  <button class="btn btn-outline" style="margin-top:10px" onclick="goBack()">← Назад</button>
 </div>
 
 <div id="main-screen">
   <div class="counter-bar">
     <span>Следующий №: <b id="nextNum">—</b></span>
-    <span style="cursor:pointer" onclick="openSheet()">→ открыть таблицу</span>
+    <span style="cursor:pointer" onclick="openSheet()">→ таблица</span>
   </div>
-  <div style="font-size:10px;color:var(--muted);margin-bottom:14px;cursor:pointer" onclick="changeSheetId()">⚙ сменить ID таблицы</div>
 
   <div class="field-group">
     <label>Дата <button class="date-today" onclick="setToday()">сегодня</button></label>
     <input type="date" id="f_date">
   </div>
-
   <div class="field-group">
     <label>Наименование материала</label>
     <input type="text" id="f_name" placeholder="Труба ПВХ Ø50, кирпич М150..." autocomplete="off" autocorrect="off">
   </div>
-
   <div class="row2">
     <div class="field-group">
       <label>Кол-во</label>
@@ -164,35 +146,25 @@ textarea { resize: none; height: 68px; font-size: 13px; }
       </select>
     </div>
   </div>
-
   <div class="field-group">
     <label>Направление (лист)</label>
     <select id="f_direction">
-      <option>Утепление (плотники)</option>
-      <option>Сантехника</option>
-      <option>Электрика</option>
-      <option>Вентиляция</option>
-      <option>Парные и хаммамы</option>
-      <option>Гидроизоляция</option>
-      <option>Отделка</option>
-      <option>Кровля</option>
-      <option>Общестрой</option>
-      <option>Ресторан</option>
-      <option>Пожарные системы</option>
-      <option>Бассейны</option>
+      <option>Утепление (плотники)</option><option>Сантехника</option>
+      <option>Электрика</option><option>Вентиляция</option>
+      <option>Парные и хаммамы</option><option>Гидроизоляция</option>
+      <option>Отделка</option><option>Кровля</option>
+      <option>Общестрой</option><option>Ресторан</option>
+      <option>Пожарные системы</option><option>Бассейны</option>
     </select>
   </div>
-
   <div class="field-group">
     <label>Поставщик</label>
     <input type="text" id="f_supplier" placeholder="Название магазина / компании" autocomplete="off">
   </div>
-
   <div class="field-group">
     <label>Чей материал (подрядчик)</label>
     <input type="text" id="f_contractor" placeholder="VentPlastCom / Общее..." autocomplete="off">
   </div>
-
   <div class="row2">
     <div class="field-group">
       <label>Накладная №</label>
@@ -203,14 +175,11 @@ textarea { resize: none; height: 68px; font-size: 13px; }
       <input type="number" id="f_cost" placeholder="0" inputmode="decimal" min="0">
     </div>
   </div>
-
   <div class="field-group">
     <label>Примечание</label>
     <textarea id="f_note" placeholder="Дополнительная информация..."></textarea>
   </div>
-
-  <button class="submit-btn" id="submitBtn" onclick="submitEntry()">ЗАПИСАТЬ В ТАБЛИЦУ</button>
-
+  <button class="btn" id="submitBtn" onclick="submitEntry()">ЗАПИСАТЬ В ТАБЛИЦУ</button>
   <div class="section-label">Последние записи (сессия)</div>
   <div id="recentList"><div style="color:var(--muted);font-size:12px">Нет записей</div></div>
 </div>
@@ -228,6 +197,7 @@ let accessToken = null;
 let sheetId     = localStorage.getItem('kb_sheet_id') || '';
 let recent      = [];
 let tokenClient = null;
+let prevScreen  = 'main';
 
 window.onload = () => {
   const check = setInterval(() => {
@@ -251,26 +221,28 @@ window.onload = () => {
 function signIn() { tokenClient.requestAccessToken({ prompt: '' }); }
 
 function signOut() {
-  if (accessToken) google.accounts.oauth2.revoke(accessToken, () => {});
+  if (accessToken) try { google.accounts.oauth2.revoke(accessToken, ()=>{}); } catch(e){}
   accessToken = null;
   sheetId = '';
   localStorage.removeItem('kb_sheet_id');
   document.getElementById('userChip').style.display = 'none';
+  document.getElementById('changeBtn').style.display = 'none';
   document.getElementById('logoutBtn').style.display = 'none';
   showScreen('login');
 }
 
 async function onSignedIn() {
   try {
-    const r = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', { headers: { Authorization: 'Bearer ' + accessToken } });
+    const r = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {headers:{Authorization:'Bearer '+accessToken}});
     const u = await r.json();
     const chip = document.getElementById('userChip');
     chip.textContent = u.email || '';
     chip.style.display = 'block';
+    document.getElementById('changeBtn').style.display = 'block';
     document.getElementById('logoutBtn').style.display = 'block';
-  } catch(e) {}
+  } catch(e){}
 
-  if (!sheetId) { showScreen('sheet-setup'); return; }
+  if (!sheetId) { prevScreen='login'; showScreen('sheet-setup'); return; }
   showScreen('main');
   setToday();
   fetchNextNum();
@@ -280,38 +252,44 @@ function saveSheetId() {
   const v = document.getElementById('sheetIdInput').value.trim();
   if (!v) { toast('Вставь ID таблицы', 'error'); return; }
   sheetId = v;
-  localStorage.setItem('kb_sheet_id', v);
+  localStorage.setItem('kb_sheet_id', sheetId);
   showScreen('main');
   setToday();
   fetchNextNum();
+  toast('ID таблицы сохранён ✓', 'success');
+}
+
+function goBack() {
+  if (accessToken && sheetId) showScreen('main');
+  else showScreen('login');
 }
 
 async function sheetsGet(range) {
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${encodeURIComponent(range)}`;
-  const r = await fetch(url, { headers: { Authorization: 'Bearer ' + accessToken } });
-  if (!r.ok) throw new Error(await r.text());
+  const r = await fetch(url, {headers:{Authorization:'Bearer '+accessToken}});
+  if (!r.ok) { const t = await r.text(); throw new Error(t); }
   return r.json();
 }
 
 async function sheetsAppend(values) {
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${encodeURIComponent(SHEET_NAME + '!A:K')}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`;
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${encodeURIComponent(SHEET_NAME+'!A:K')}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`;
   const r = await fetch(url, {
-    method: 'POST',
-    headers: { Authorization: 'Bearer ' + accessToken, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ values: [values] })
+    method:'POST',
+    headers:{Authorization:'Bearer '+accessToken,'Content-Type':'application/json'},
+    body:JSON.stringify({values:[values]})
   });
-  if (!r.ok) throw new Error(await r.text());
+  if (!r.ok) { const t = await r.text(); throw new Error(t); }
   return r.json();
 }
 
 async function fetchNextNum() {
   try {
-    const data = await sheetsGet(SHEET_NAME + '!A:A');
-    const rows = (data.values || []).slice(DATA_ROW - 1);
-    let maxNum = 0;
-    rows.forEach(r => { const v = parseFloat(r[0]); if (!isNaN(v) && v > maxNum) maxNum = v; });
-    document.getElementById('nextNum').textContent = maxNum + 1;
-    return maxNum + 1;
+    const data = await sheetsGet(SHEET_NAME+'!A:A');
+    const rows = (data.values||[]).slice(DATA_ROW-1);
+    let max = 0;
+    rows.forEach(r=>{ const v=parseFloat(r[0]); if(!isNaN(v)&&v>max) max=v; });
+    document.getElementById('nextNum').textContent = max+1;
+    return max+1;
   } catch(e) {
     document.getElementById('nextNum').textContent = '?';
     return null;
@@ -320,29 +298,26 @@ async function fetchNextNum() {
 
 async function submitEntry() {
   if (!accessToken) { toast('Сессия истекла', 'error'); signOut(); return; }
-
   const name = document.getElementById('f_name').value.trim();
   const qty  = document.getElementById('f_qty').value.trim();
   const date = document.getElementById('f_date').value;
-
   if (!name) { toast('Укажи наименование', 'error'); return; }
   if (!qty)  { toast('Укажи количество', 'error'); return; }
   if (!date) { toast('Укажи дату', 'error'); return; }
 
   const num = await fetchNextNum() || '?';
-  const [y, m, d] = date.split('-');
+  const [y,m,d] = date.split('-');
   const dateStr = `${d}.${m}.${y}`;
-
   const row = [
     num, dateStr, name,
     document.getElementById('f_unit').value,
-    parseFloat(qty) || 0,
+    parseFloat(qty)||0,
     document.getElementById('f_supplier').value.trim(),
     document.getElementById('f_contractor').value.trim(),
     document.getElementById('f_invoice').value.trim(),
     document.getElementById('f_direction').value,
-    parseFloat(document.getElementById('f_cost').value) || 0,
-    document.getElementById('f_note').value.trim() || 'Нет',
+    parseFloat(document.getElementById('f_cost').value)||0,
+    document.getElementById('f_note').value.trim()||'Нет',
   ];
 
   const btn = document.getElementById('submitBtn');
@@ -352,75 +327,58 @@ async function submitEntry() {
   try {
     await sheetsAppend(row);
     toast(`✓ Записано №${num}`, 'success');
-    addRecent({ num, name, qty, unit: document.getElementById('f_unit').value, direction: document.getElementById('f_direction').value, date: dateStr, cost: document.getElementById('f_cost').value });
+    recent.unshift({num,name,qty,unit:document.getElementById('f_unit').value,direction:document.getElementById('f_direction').value,date:dateStr,cost:document.getElementById('f_cost').value});
+    if(recent.length>8) recent.pop();
+    renderRecent();
     clearForm();
-    document.getElementById('nextNum').textContent = Number(num) + 1;
+    document.getElementById('nextNum').textContent = Number(num)+1;
   } catch(e) {
-    toast('Ошибка: ' + e.message.slice(0, 60), 'error');
+    toast('Ошибка: '+e.message.slice(0,80), 'error');
   }
-
   btn.disabled = false;
   btn.innerHTML = 'ЗАПИСАТЬ В ТАБЛИЦУ';
 }
 
 function clearForm() {
-  ['f_name','f_supplier','f_contractor','f_invoice','f_note'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('f_qty').value = '';
-  document.getElementById('f_cost').value = '';
+  ['f_name','f_supplier','f_contractor','f_invoice','f_note'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f_qty').value='';
+  document.getElementById('f_cost').value='';
   setToday();
 }
-
-function setToday() {
-  document.getElementById('f_date').value = new Date().toISOString().split('T')[0];
-}
-
-function openSheet() {
-function changeSheetId() {
-  const id = prompt("Вставь новый ID таблицы:");
-  if (!id || !id.trim()) return;
-  sheetId = id.trim();
-  localStorage.setItem("kb_sheet_id", sheetId);
-  fetchNextNum();
-  toast("ID таблицы обновлён ✓", "success");
-}
-
-  if (sheetId) window.open(`https://docs.google.com/spreadsheets/d/${sheetId}/edit`, '_blank');
-}
-
-function addRecent(e) {
-  recent.unshift(e);
-  if (recent.length > 8) recent.pop();
-  renderRecent();
-}
+function setToday() { document.getElementById('f_date').value=new Date().toISOString().split('T')[0]; }
+function openSheet() { if(sheetId) window.open(`https://docs.google.com/spreadsheets/d/${sheetId}/edit`,'_blank'); }
 
 function renderRecent() {
   const el = document.getElementById('recentList');
-  if (!recent.length) { el.innerHTML = '<div style="color:var(--muted);font-size:12px">Нет записей</div>'; return; }
-  el.innerHTML = recent.map(e => `
+  if (!recent.length) { el.innerHTML='<div style="color:var(--muted);font-size:12px">Нет записей</div>'; return; }
+  el.innerHTML = recent.map(e=>`
     <div class="entry-card">
       <div class="mat">№${e.num} · ${e.name}</div>
       <div class="meta">
         <span class="qty">${e.qty} ${e.unit}</span>
         <span>${e.direction}</span>
         <span>${e.date}</span>
-        ${e.cost && e.cost !== '0' ? `<span>${Number(e.cost).toLocaleString('ru')} тг</span>` : ''}
+        ${e.cost&&e.cost!='0'?`<span>${Number(e.cost).toLocaleString('ru')} тг</span>`:''}
       </div>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
 
 function showScreen(name) {
   document.getElementById('loading-screen').style.display = 'none';
-  document.getElementById('login-screen').style.display  = name === 'login'       ? 'flex'  : 'none';
-  document.getElementById('sheet-setup').style.display   = name === 'sheet-setup' ? 'block' : 'none';
-  document.getElementById('main-screen').style.display   = name === 'main'        ? 'block' : 'none';
+  document.getElementById('login-screen').style.display   = name==='login'       ? 'flex'  : 'none';
+  document.getElementById('sheet-setup').style.display    = name==='sheet-setup' ? 'block' : 'none';
+  document.getElementById('main-screen').style.display    = name==='main'        ? 'block' : 'none';
+  // Prefill current ID in input
+  if (name==='sheet-setup') {
+    document.getElementById('sheetIdInput').value = sheetId || '';
+  }
 }
 
-function toast(msg, type = '') {
+function toast(msg, type='') {
   const el = document.getElementById('toast');
   el.textContent = msg;
   el.className = `show ${type}`;
-  setTimeout(() => el.className = '', 3200);
+  setTimeout(()=>el.className='', 3200);
 }
 </script>
 </body>
