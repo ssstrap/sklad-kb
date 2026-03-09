@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Журнал Приходов КБ</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #1a1310;
+  --bg2: #0f0c0a;
+  --surface: #241e19;
+  --surface2: #2e261f;
+  --surface3: #382f26;
+  --border: #3d3229;
+  --border2: #4a3d32;
+  --accent: #d4a96a;
+  --accent2: #c49555;
+  --accent3: #e8c48a;
+  --accent-glow: rgba(212, 169, 106, 0.15);
+  --accent-glow2: rgba(212, 169, 106, 0.08);
+  --text: #f0e6d8;
+  --text2: #c8b9a6;
+  --muted: #7a6b5a;
+  --muted2: #5a4d3f;
+  --danger: #c45e5e;
+  --danger-bg: rgba(196, 94, 94, 0.1);
+  --success: #6daa7a;
+  --success-bg: rgba(109, 170, 122, 0.1);
+  --info: #6a9fd4;
+  --info-bg: rgba(106, 159, 212, 0.1);
+  --r: 14px;
+  --r2: 20px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.2);
+  --shadow2: 0 8px 40px rgba(0,0,0,0.4);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+  background: var(--bg2);
+  color: var(--text);
+  font-family: 'Manrope', sans-serif;
+  min-height: 100dvh;
+  overscroll-behavior: none;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(212,169,106,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 100%, rgba(212,169,106,0.04) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.5;
+}
+
+/* Header */
+header {
+  background: linear-gradient(180deg, var(--surface) 0%, rgba(36,30,25,0.95) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+}
+
+.logo { display: flex; align-items: center; gap: 12px; }
+
+.logo-icon {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  box-shadow: 0 2px 12px rgba(212,169,106,0.25);
+}
+
+.logo-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+}
+
+.logo-text span {
+  display: block;
+  font-family: 'Manrope', sans-serif;
+  font-size: 9px;
+  font-weight: 400;
+  color: var(--muted);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-top: 3px;
+}
+
+.hright { display: flex; align-items: center; gap: 8px; }
+
+.user-chip {
+  font-size: 10px;
+  color: var(--muted);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 5px 12px;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: none;
+}
+
+.hbtn {
+  font-size: 10px;
+  color: var(--muted);
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 5px 10px;
+  display: none;
+  transition: all 0.3s ease;
+}
+
+.hbtn:hover { color: var(--accent); border-color: var(--accent); }
+
+/* Screens */
+.screen { display: none; position: relative; z-index: 1; }
+
+#loading-screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  min-height: calc(100dvh - 57px);
+  color: var(--muted);
+  font-size: 12px;
+  gap: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+#login-screen {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100dvh - 57px);
+  padding: 32px 24px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+#main-screen {
+  display: none;
+  padding: 20px;
+  max-width: 700px;
+  margin: 0 auto;
+  padding-bottom: 60px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Login */
+.login-emblem {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, var(--surface2) 0%, var(--surface3) 100%);
+  border: 2px solid var(--border);
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  margin-bottom: 28px;
+  box-shadow: var(--shadow2);
+  animation: emblemFloat 3s ease-in-out infinite;
+  position: relative;
+}
+
+.login-emblem::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 26px;
+  border: 1px solid var(--accent-glow);
+  animation: emblemPulse 3s ease-in-out infinite;
+}
+
+@keyframes emblemFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes emblemPulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+
+.login-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.login-sub {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.8;
+  margin-bottom: 36px;
+  max-width: 280px;
+  font-weight: 300;
+}
+
+.login-divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 320px;
+}
+
+.login-divider::before,
+.login-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+}
+
+.login-divider span {
+  font-size: 9px;
+  color: var(--muted2);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+}
+
+.deco-line {
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  margin: 16px auto;
+  border-radius: 2px;
+}
+
+.google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: linear-gradient(135deg, var(--surface) 0%, var(--surface2) 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  color: var(--text);
+  font-family: 'Manrope', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 16px 28px;
+  cursor: pointer;
+  width: 100%;
+  max-width: 320px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.google-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--accent-glow) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.google-btn:hover { border-color: var(--accent2); transform: translateY(-2px); box-shadow: var(--shadow2), 0 0 30px rgba(212,169,106,0.1); }
+.google-btn:hover::before { opacity: 1; }
+.google-btn:active { transform: translateY(0) scale(0.98); }
+
+/* Sheet Setup */
+#sheet-setup {
+  display: none;
+  padding: 24px 20px;
+  max-width: 480px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.screen-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+
+.screen-desc {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.8;
+  margin-bottom: 24px;
+  font-weight: 300;
+}
+
+.screen-desc code {
+  color: var(--accent);
+  background: var(--surface2);
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-family: 'Manrope', sans-serif;
+  font-size: 11px;
+  border: 1px solid var(--border);
+}
+
+/* Form fields */
+.field-group { margin-bottom: 16px; }
+
+label {
+  display: block;
+  font-size: 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-bottom: 7px;
+  font-weight: 500;
+}
+
+input, select {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  color: var(--text);
+  font-family: 'Manrope', sans-serif;
+  font-size: 15px;
+  padding: 13px 16px;
+  outline: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-appearance: none;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.15);
+}
+
+input::placeholder { color: var(--muted2); font-weight: 300; }
+
+input:focus, select:focus {
+  border-color: var(--accent2);
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.15), 0 0 0 3px var(--accent-glow2), 0 0 20px var(--accent-glow2);
+  background: var(--surface2);
+}
+
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237a6b5a' stroke-width='1.5' stroke-linecap='round' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  padding-right: 38px;
+}
+
+select option { background: var(--surface); }
+
+/* Buttons */
+.btn {
+  width: 100%;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+  color: #1a1310;
+  border: none;
+  border-radius: var(--r);
+  font-family: 'Manrope', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 16px;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: 0 4px 16px rgba(212,169,106,0.25);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  transition: left 0.6s ease;
+}
+
+.btn:hover::before { left: 100%; }
+.btn:active { transform: scale(0.97); }
+
+.btn:disabled {
+  background: var(--surface2);
+  color: var(--muted2);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-outline {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  box-shadow: none;
+}
+
+.btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+.btn-outline::before { display: none; }
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 4px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.tabs::-webkit-scrollbar { display: none; }
+
+.tab {
+  flex: 1;
+  min-width: 0;
+  background: none;
+  border: none;
+  border-radius: 10px;
+  color: var(--muted);
+  font-family: 'Manrope', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 10px 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.tab:hover { color: var(--text2); }
+
+.tab.active {
+  background: linear-gradient(135deg, rgba(212,169,106,0.15) 0%, rgba(196,149,85,0.08) 100%);
+  color: var(--accent3);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+/* Summary cards */
+.summary-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.summary-card {
+  background: linear-gradient(135deg, var(--surface) 0%, rgba(46,38,31,0.5) 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.summary-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  border-radius: 3px 0 0 3px;
+}
+
+.summary-card.total::before { background: linear-gradient(180deg, var(--accent), var(--accent2)); }
+.summary-card.count::before { background: linear-gradient(180deg, var(--info), #5a8ec4); }
+.summary-card.today::before { background: linear-gradient(180deg, var(--success), #5a9a6a); }
+.summary-card.avg::before { background: linear-gradient(180deg, #c49555, #a07840); }
+
+.summary-card .sc-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.summary-card .sc-value {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1;
+}
+
+.summary-card .sc-value small {
+  font-size: 12px;
+  color: var(--muted);
+  font-family: 'Manrope', sans-serif;
+  font-weight: 400;
+}
+
+/* Filters bar */
+.filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.filters select, .filters input {
+  flex: 1;
+  min-width: 0;
+  font-size: 13px;
+  padding: 10px 14px;
+}
+
+.filters input[type="search"] {
+  flex: 2;
+  min-width: 160px;
+}
+
+/* Data table */
+.data-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  min-width: 600px;
+}
+
+.data-table th {
+  background: var(--surface2);
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  padding: 12px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  white-space: nowrap;
+}
+
+.data-table td {
+  padding: 11px 12px;
+  border-bottom: 1px solid rgba(61,50,41,0.3);
+  color: var(--text2);
+  vertical-align: top;
+}
+
+.data-table tr:last-child td { border-bottom: none; }
+
+.data-table tr:hover td { background: rgba(212,169,106,0.04); }
+
+.data-table .col-num { width: 40px; color: var(--muted); font-size: 11px; }
+.data-table .col-date { white-space: nowrap; color: var(--muted); font-size: 11px; }
+.data-table .col-name { font-weight: 500; color: var(--text); min-width: 140px; }
+.data-table .col-qty { white-space: nowrap; color: var(--accent); font-weight: 600; }
+.data-table .col-cost { white-space: nowrap; font-weight: 600; color: var(--accent3); }
+.data-table .col-dir { font-size: 11px; }
+.data-table .col-supplier { font-size: 11px; color: var(--muted); }
+.data-table .col-contractor { font-size: 11px; color: var(--muted); }
+
+/* Aggregation cards */
+.agg-card {
+  background: linear-gradient(135deg, var(--surface) 0%, rgba(46,38,31,0.5) 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 14px 16px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.agg-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, var(--accent), var(--accent2));
+  border-radius: 3px 0 0 3px;
+}
+
+.agg-card:hover {
+  border-color: var(--border2);
+  transform: translateX(3px);
+}
+
+.agg-card .agg-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.agg-card .agg-sub {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 3px;
+}
+
+.agg-card .agg-value {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--accent3);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.agg-card .agg-value small {
+  display: block;
+  font-family: 'Manrope', sans-serif;
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+/* Bar chart simple */
+.bar-track {
+  width: 100%;
+  height: 6px;
+  background: var(--surface3);
+  border-radius: 3px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent2), var(--accent));
+  border-radius: 3px;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Section label */
+.section-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+  margin: 24px 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 500;
+}
+
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--border), transparent);
+}
+
+/* Counter bar */
+.counter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  font-size: 11px;
+  color: var(--muted);
+  padding: 12px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  box-shadow: var(--shadow);
+}
+
+.counter-bar .sheet-link {
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.counter-bar .sheet-link:hover { color: var(--accent); }
+.counter-bar .sheet-link svg { width: 14px; height: 14px; }
+
+/* Loading & empty */
+.loading-orb {
+  width: 48px;
+  height: 48px;
+  position: relative;
+}
+
+.loading-orb::before,
+.loading-orb::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid transparent;
+}
+
+.loading-orb::before { border-top-color: var(--accent); animation: spin 1s linear infinite; }
+.loading-orb::after { border-bottom-color: var(--accent2); animation: spin 1.5s linear infinite reverse; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+.empty-state {
+  color: var(--muted2);
+  font-size: 12px;
+  text-align: center;
+  padding: 40px 20px;
+  font-weight: 300;
+  font-style: italic;
+}
+
+.inline-load {
+  text-align: center;
+  padding: 40px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* Toast */
+#toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 40px;
+  padding: 13px 24px;
+  font-size: 13px;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 999;
+  white-space: nowrap;
+  max-width: 90vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-shadow: var(--shadow2);
+  backdrop-filter: blur(12px);
+  font-weight: 500;
+}
+
+#toast.show { transform: translateX(-50%) translateY(0); }
+#toast.success { border-color: var(--success); color: var(--success); background: linear-gradient(135deg, var(--surface2), var(--success-bg)); }
+#toast.error { border-color: var(--danger); color: var(--danger); background: linear-gradient(135deg, var(--surface2), var(--danger-bg)); }
+
+/* Page animation */
+@keyframes pageEnter {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.page-enter { animation: pageEnter 0.6s cubic-bezier(0.4, 0, 0.2, 1) both; }
+
+@keyframes cardSlideIn {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* Refresh button */
+.refresh-btn {
+  font-size: 10px;
+  color: var(--accent);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 6px 12px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+}
+
+.refresh-btn:hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 12px var(--accent-glow2);
+}
+
+.refresh-btn:disabled { color: var(--muted2); cursor: not-allowed; }
+
+/* Table footer */
+.table-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  font-size: 11px;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 0 0 var(--r) var(--r);
+}
+
+.table-footer .total-sum {
+  color: var(--accent3);
+  font-weight: 600;
+  font-size: 12px;
+}
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--muted2); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">📋</div>
+    <div class="logo-text">Журнал Приходов<span>Королевские бани · Астана</span></div>
+  </div>
+  <div class="hright">
+    <div class="user-chip" id="userChip"></div>
+    <button class="hbtn" id="changeBtn" onclick="showScreen('sheet-setup')">ID таблицы</button>
+    <button class="hbtn" id="logoutBtn" onclick="signOut()">выйти</button>
+  </div>
+</header>
+
+<div id="loading-screen">
+  <div class="loading-orb"></div>
+  <span style="font-weight:300;letter-spacing:0.1em;font-size:11px;margin-top:4px">Инициализация...</span>
+</div>
+
+<div id="login-screen">
+  <div class="login-emblem">📋</div>
+  <div class="login-title">Журнал Приходов</div>
+  <div class="deco-line"></div>
+  <div class="login-sub">Просмотр всех приходов материалов.<br>Авторизация через Google для доступа к данным.</div>
+  <div class="login-divider"><span>Вход</span></div>
+  <button class="google-btn" onclick="signIn()">
+    <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.35-8.16 2.35-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+    Войти через Google
+  </button>
+</div>
+
+<div id="sheet-setup">
+  <div style="padding:24px 20px;max-width:480px;margin:0 auto">
+    <div class="screen-title">ID таблицы</div>
+    <div class="screen-desc">
+      Та же таблица что у «Склад КБ».<br>
+      Скопируй ID из URL: <code>spreadsheets/d/<b>ВОТ_ЭТО</b>/edit</code>
+    </div>
+    <div class="field-group">
+      <label>Spreadsheet ID</label>
+      <input type="text" id="sheetIdInput" placeholder="1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off">
+    </div>
+    <button class="btn" onclick="saveSheetId()">Сохранить и продолжить</button>
+    <button class="btn btn-outline" style="margin-top:10px" onclick="goBack()">← Назад</button>
+  </div>
+</div>
+
+<div id="main-screen">
+  <!-- Top bar -->
+  <div class="counter-bar">
+    <span style="display:flex;align-items:center;gap:8px">
+      <span id="recordCount" style="font-weight:500"></span>
+      <button class="refresh-btn" id="refreshBtn" onclick="loadAllData()">Обновить</button>
+    </span>
+    <span class="sheet-link" onclick="openSheet()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      Таблица
+    </span>
+  </div>
+
+  <!-- Summary -->
+  <div class="summary-row" id="summaryCards">
+    <div class="summary-card total">
+      <div class="sc-label">Общая сумма</div>
+      <div class="sc-value" id="sumTotal">—</div>
+    </div>
+    <div class="summary-card count">
+      <div class="sc-label">Позиций</div>
+      <div class="sc-value" id="sumCount">—</div>
+    </div>
+    <div class="summary-card today">
+      <div class="sc-label">Сегодня</div>
+      <div class="sc-value" id="sumToday">—</div>
+    </div>
+    <div class="summary-card avg">
+      <div class="sc-label">Среднее / день</div>
+      <div class="sc-value" id="sumAvg">—</div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('list')">Все приходы</button>
+    <button class="tab" onclick="switchTab('byDay')">По дням</button>
+    <button class="tab" onclick="switchTab('byDir')">По направлениям</button>
+  </div>
+
+  <!-- Tab: List -->
+  <div id="tab-list">
+    <div class="filters">
+      <input type="search" id="searchInput" placeholder="Поиск материала..." oninput="applyFilters()">
+      <select id="filterDir" onchange="applyFilters()">
+        <option value="">Все направления</option>
+      </select>
+      <select id="filterDate" onchange="applyFilters()">
+        <option value="">Все даты</option>
+      </select>
+    </div>
+    <div id="tableWrap">
+      <div class="inline-load"><span class="spinner"></span> Загрузка данных...</div>
+    </div>
+  </div>
+
+  <!-- Tab: By Day -->
+  <div id="tab-byDay" style="display:none">
+    <div id="byDayList"></div>
+  </div>
+
+  <!-- Tab: By Direction -->
+  <div id="tab-byDir" style="display:none">
+    <div id="byDirList"></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script src="https://accounts.google.com/gsi/client" async></script>
+<script>
+const CLIENT_ID = '747030737105-kpohc9g1rtfff9i8vels69r98r2akq3m.apps.googleusercontent.com';
+const SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly';
+const SHEET_NAME = 'Журнал приходов';
+const DATA_ROW = 4;
+
+let accessToken = null;
+let sheetId = localStorage.getItem('kb_journal_sheet_id') || '';
+let tokenClient = null;
+let allData = []; // parsed rows
+
+/* ── Init ── */
+window.onload = () => {
+  const check = setInterval(() => {
+    if (window.google && google.accounts) {
+      clearInterval(check);
+      tokenClient = google.accounts.oauth2.initTokenClient({
+        client_id: CLIENT_ID,
+        scope: SCOPES,
+        callback: (resp) => {
+          if (resp.error) { toast('Ошибка входа: ' + resp.error, 'error'); return; }
+          accessToken = resp.access_token;
+          onSignedIn();
+        }
+      });
+      showScreen('login');
+    }
+  }, 100);
+  setTimeout(() => { clearInterval(check); showScreen('login'); }, 6000);
+};
+
+function signIn() { tokenClient.requestAccessToken({ prompt: '' }); }
+
+function signOut() {
+  if (accessToken) try { google.accounts.oauth2.revoke(accessToken, ()=>{}); } catch(e){}
+  accessToken = null;
+  sheetId = '';
+  localStorage.removeItem('kb_journal_sheet_id');
+  document.getElementById('userChip').style.display = 'none';
+  document.getElementById('changeBtn').style.display = 'none';
+  document.getElementById('logoutBtn').style.display = 'none';
+  showScreen('login');
+}
+
+async function onSignedIn() {
+  try {
+    const r = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {headers:{Authorization:'Bearer '+accessToken}});
+    const u = await r.json();
+    const chip = document.getElementById('userChip');
+    chip.textContent = u.email || '';
+    chip.style.display = 'block';
+    document.getElementById('changeBtn').style.display = 'block';
+    document.getElementById('logoutBtn').style.display = 'block';
+  } catch(e){}
+
+  if (!sheetId) { showScreen('sheet-setup'); return; }
+  showScreen('main');
+  loadAllData();
+}
+
+function saveSheetId() {
+  const v = document.getElementById('sheetIdInput').value.trim();
+  if (!v) { toast('Вставь ID таблицы', 'error'); return; }
+  sheetId = v;
+  localStorage.setItem('kb_journal_sheet_id', sheetId);
+  showScreen('main');
+  loadAllData();
+  toast('ID таблицы сохранён ✓', 'success');
+}
+
+function goBack() {
+  if (accessToken && sheetId) showScreen('main');
+  else showScreen('login');
+}
+
+function openSheet() { if(sheetId) window.open(`https://docs.google.com/spreadsheets/d/${sheetId}/edit`, '_blank'); }
+
+/* ── Sheets API ── */
+async function sheetsGet(range) {
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${encodeURIComponent(range)}`;
+  const r = await fetch(url, {headers:{Authorization:'Bearer '+accessToken}});
+  if (!r.ok) { const t = await r.text(); throw new Error(t); }
+  return r.json();
+}
+
+/* ── Load all data ── */
+async function loadAllData() {
+  const btn = document.getElementById('refreshBtn');
+  btn.disabled = true;
+  btn.textContent = '...';
+  document.getElementById('tableWrap').innerHTML = '<div class="inline-load"><span class="spinner"></span> Загрузка данных...</div>';
+
+  try {
+    const data = await sheetsGet(`'${SHEET_NAME}'!A${DATA_ROW}:K5000`);
+    const rows = data.values || [];
+    allData = [];
+
+    for (const r of rows) {
+      const num = r[0];
+      if (!num || num === '') continue;
+      allData.push({
+        num: r[0] || '',
+        date: r[1] || '',
+        name: r[2] || '',
+        unit: r[3] || '',
+        qty: r[4] || '',
+        supplier: r[5] || '',
+        contractor: r[6] || '',
+        invoice: r[7] || '',
+        direction: r[8] || '',
+        cost: parseFloat(r[9]) || 0,
+        note: r[10] || '',
+      });
+    }
+
+    buildFilters();
+    applyFilters();
+    buildSummary();
+    buildByDay();
+    buildByDir();
+
+    document.getElementById('recordCount').textContent = `${allData.length} записей`;
+    toast(`Загружено ${allData.length} записей`, 'success');
+
+  } catch(e) {
+    document.getElementById('tableWrap').innerHTML = `<div class="empty-state" style="color:var(--danger)">Ошибка: ${e.message.slice(0,100)}</div>`;
+    toast('Ошибка загрузки', 'error');
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Обновить';
+}
+
+/* ── Filters ── */
+function buildFilters() {
+  const dirs = [...new Set(allData.map(r => r.direction).filter(Boolean))].sort();
+  const dates = [...new Set(allData.map(r => r.date).filter(Boolean))];
+  // Sort dates in reverse (newest first)
+  dates.sort((a, b) => {
+    const pa = parseDateStr(a);
+    const pb = parseDateStr(b);
+    return pb - pa;
+  });
+
+  const dirSel = document.getElementById('filterDir');
+  dirSel.innerHTML = '<option value="">Все направления</option>' +
+    dirs.map(d => `<option value="${d}">${d}</option>`).join('');
+
+  const dateSel = document.getElementById('filterDate');
+  dateSel.innerHTML = '<option value="">Все даты</option>' +
+    dates.map(d => `<option value="${d}">${d}</option>`).join('');
+}
+
+function parseDateStr(s) {
+  // "04.03.2026" → Date
+  if (!s) return new Date(0);
+  const parts = s.split('.');
+  if (parts.length === 3) {
+    return new Date(+parts[2], +parts[1]-1, +parts[0]);
+  }
+  return new Date(s);
+}
+
+function getTodayStr() {
+  const d = new Date();
+  const dd = String(d.getDate()).padStart(2,'0');
+  const mm = String(d.getMonth()+1).padStart(2,'0');
+  const yy = d.getFullYear();
+  return `${dd}.${mm}.${yy}`;
+}
+
+function applyFilters() {
+  const search = document.getElementById('searchInput').value.trim().toLowerCase();
+  const dir = document.getElementById('filterDir').value;
+  const date = document.getElementById('filterDate').value;
+
+  let filtered = allData;
+
+  if (search) {
+    filtered = filtered.filter(r =>
+      r.name.toLowerCase().includes(search) ||
+      r.supplier.toLowerCase().includes(search) ||
+      r.contractor.toLowerCase().includes(search) ||
+      r.note.toLowerCase().includes(search)
+    );
+  }
+
+  if (dir) filtered = filtered.filter(r => r.direction === dir);
+  if (date) filtered = filtered.filter(r => r.date === date);
+
+  renderTable(filtered);
+}
+
+/* ── Render table ── */
+function renderTable(rows) {
+  if (!rows.length) {
+    document.getElementById('tableWrap').innerHTML = '<div class="empty-state">Нет данных по выбранным фильтрам</div>';
+    return;
+  }
+
+  // Reverse so newest first
+  const sorted = [...rows].reverse();
+
+  const totalCost = rows.reduce((s, r) => s + r.cost, 0);
+
+  let html = `<div class="data-table-wrap"><table class="data-table">
+    <thead><tr>
+      <th>№</th>
+      <th>Дата</th>
+      <th>Материал</th>
+      <th>Кол-во</th>
+      <th>Направление</th>
+      <th>Поставщик</th>
+      <th>Подрядчик</th>
+      <th>Стоимость</th>
+    </tr></thead><tbody>`;
+
+  for (const r of sorted) {
+    html += `<tr>
+      <td class="col-num">${r.num}</td>
+      <td class="col-date">${r.date}</td>
+      <td class="col-name">${esc(r.name)}</td>
+      <td class="col-qty">${r.qty} ${esc(r.unit)}</td>
+      <td class="col-dir">${esc(r.direction)}</td>
+      <td class="col-supplier">${esc(r.supplier)}</td>
+      <td class="col-contractor">${esc(r.contractor)}</td>
+      <td class="col-cost">${r.cost ? fmt(r.cost) + ' тг' : '—'}</td>
+    </tr>`;
+  }
+
+  html += `</tbody></table></div>
+    <div class="table-footer">
+      <span>Показано: ${rows.length}</span>
+      <span class="total-sum">Итого: ${fmt(totalCost)} тг</span>
+    </div>`;
+
+  document.getElementById('tableWrap').innerHTML = html;
+}
+
+/* ── Summary cards ── */
+function buildSummary() {
+  const total = allData.reduce((s, r) => s + r.cost, 0);
+  const count = allData.length;
+
+  const todayStr = getTodayStr();
+  const todaySum = allData.filter(r => r.date === todayStr).reduce((s, r) => s + r.cost, 0);
+
+  const dates = [...new Set(allData.map(r => r.date).filter(Boolean))];
+  const avg = dates.length > 0 ? total / dates.length : 0;
+
+  document.getElementById('sumTotal').innerHTML = fmt(total) + ' <small>тг</small>';
+  document.getElementById('sumCount').textContent = count;
+  document.getElementById('sumToday').innerHTML = fmt(todaySum) + ' <small>тг</small>';
+  document.getElementById('sumAvg').innerHTML = fmt(Math.round(avg)) + ' <small>тг</small>';
+}
+
+/* ── By Day ── */
+function buildByDay() {
+  const byDay = {};
+  for (const r of allData) {
+    if (!r.date) continue;
+    if (!byDay[r.date]) byDay[r.date] = { cost: 0, count: 0 };
+    byDay[r.date].cost += r.cost;
+    byDay[r.date].count++;
+  }
+
+  const days = Object.entries(byDay).sort((a, b) => {
+    return parseDateStr(b[0]) - parseDateStr(a[0]);
+  });
+
+  if (!days.length) {
+    document.getElementById('byDayList').innerHTML = '<div class="empty-state">Нет данных</div>';
+    return;
+  }
+
+  const maxCost = Math.max(...days.map(d => d[1].cost));
+
+  let html = '';
+  for (const [date, info] of days) {
+    const pct = maxCost > 0 ? (info.cost / maxCost * 100) : 0;
+    html += `<div class="agg-card" style="animation: cardSlideIn 0.5s ease both">
+      <div>
+        <div class="agg-label">${date}</div>
+        <div class="agg-sub">${info.count} позиций</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+      </div>
+      <div class="agg-value">${fmt(info.cost)}<small>тг</small></div>
+    </div>`;
+  }
+
+  document.getElementById('byDayList').innerHTML = html;
+}
+
+/* ── By Direction ── */
+function buildByDir() {
+  const byDir = {};
+  for (const r of allData) {
+    if (!r.direction) continue;
+    if (!byDir[r.direction]) byDir[r.direction] = { cost: 0, count: 0 };
+    byDir[r.direction].cost += r.cost;
+    byDir[r.direction].count++;
+  }
+
+  const dirs = Object.entries(byDir).sort((a, b) => b[1].cost - a[1].cost);
+
+  if (!dirs.length) {
+    document.getElementById('byDirList').innerHTML = '<div class="empty-state">Нет данных</div>';
+    return;
+  }
+
+  const maxCost = Math.max(...dirs.map(d => d[1].cost));
+  const totalCost = dirs.reduce((s, d) => s + d[1].cost, 0);
+
+  let html = '';
+  for (const [dir, info] of dirs) {
+    const pct = maxCost > 0 ? (info.cost / maxCost * 100) : 0;
+    const share = totalCost > 0 ? (info.cost / totalCost * 100).toFixed(1) : 0;
+    html += `<div class="agg-card" style="animation: cardSlideIn 0.5s ease both">
+      <div style="flex:1;min-width:0">
+        <div class="agg-label">${esc(dir)}</div>
+        <div class="agg-sub">${info.count} позиций · ${share}%</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+      </div>
+      <div class="agg-value">${fmt(info.cost)}<small>тг</small></div>
+    </div>`;
+  }
+
+  document.getElementById('byDirList').innerHTML = html;
+}
+
+/* ── Tabs ── */
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    const names = ['list', 'byDay', 'byDir'];
+    t.classList.toggle('active', names[i] === name);
+  });
+  document.getElementById('tab-list').style.display = name === 'list' ? '' : 'none';
+  document.getElementById('tab-byDay').style.display = name === 'byDay' ? '' : 'none';
+  document.getElementById('tab-byDir').style.display = name === 'byDir' ? '' : 'none';
+}
+
+/* ── Navigation ── */
+function showScreen(name) {
+  document.getElementById('loading-screen').style.display = 'none';
+  document.getElementById('login-screen').style.display = name === 'login' ? 'flex' : 'none';
+  document.getElementById('sheet-setup').style.display = name === 'sheet-setup' ? 'block' : 'none';
+  document.getElementById('main-screen').style.display = name === 'main' ? 'block' : 'none';
+  if (name === 'sheet-setup') {
+    document.getElementById('sheetIdInput').value = sheetId || '';
+  }
+  const screens = { login:'login-screen', 'sheet-setup':'sheet-setup', main:'main-screen' };
+  const el = document.getElementById(screens[name]);
+  if (el) {
+    el.classList.remove('page-enter');
+    void el.offsetWidth;
+    el.classList.add('page-enter');
+  }
+}
+
+/* ── Utils ── */
+function fmt(n) {
+  return Math.round(n).toLocaleString('ru-RU');
+}
+
+function esc(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+function toast(msg, type='') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = `show ${type}`;
+  setTimeout(() => el.className = '', 3200);
+}
+</script>
+</body>
+</html>
