@@ -793,7 +793,7 @@ textarea { resize: none; height: 72px; font-size: 13px; line-height: 1.6; }
   </div>
   <div class="field-group">
     <label>Поставщик</label>
-    <input type="text" id="f_supplier" placeholder="Название магазина / компании" autocomplete="off">
+    <input type="text" id="f_supplier" value="Магазин" autocomplete="off">
   </div>
   <div class="field-group">
     <label>Чей материал (подрядчик)</label>
@@ -802,7 +802,7 @@ textarea { resize: none; height: 72px; font-size: 13px; line-height: 1.6; }
   <div class="row2">
     <div class="field-group">
       <label>Накладная №</label>
-      <input type="text" id="f_invoice" placeholder="фото / №123" autocomplete="off">
+      <input type="text" id="f_invoice" value="Фото 11" autocomplete="off">
     </div>
     <div class="field-group">
       <label>Стоимость, тг</label>
@@ -811,7 +811,7 @@ textarea { resize: none; height: 72px; font-size: 13px; line-height: 1.6; }
   </div>
   <div class="field-group">
     <label>Примечание</label>
-    <textarea id="f_note" placeholder="Дополнительная информация..."></textarea>
+    <textarea id="f_note" placeholder="Дополнительная информация...">Нет</textarea>
   </div>
   <button class="btn" id="submitBtn" onclick="submitEntry()">Записать в таблицу</button>
   <div class="section-label">Последние записи</div>
@@ -990,7 +990,10 @@ async function submitEntry() {
 }
 
 function clearForm() {
-  ['f_name','f_supplier','f_contractor','f_invoice','f_note'].forEach(id=>document.getElementById(id).value='');
+  ['f_name','f_contractor'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f_supplier').value='Магазин';
+  document.getElementById('f_invoice').value='Фото 11';
+  document.getElementById('f_note').value='Нет';
   document.getElementById('f_qty').value='';
   document.getElementById('f_cost').value='';
   setToday();
