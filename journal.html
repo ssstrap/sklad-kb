@@ -67,7 +67,6 @@ body::after {
   opacity: 0.5;
 }
 
-/* Header */
 header {
   background: linear-gradient(180deg, var(--surface) 0%, rgba(36,30,25,0.95) 100%);
   backdrop-filter: blur(20px);
@@ -148,7 +147,6 @@ header {
 
 .hbtn:hover { color: var(--accent); border-color: var(--accent); }
 
-/* Screens */
 .screen { display: none; position: relative; z-index: 1; }
 
 #loading-screen {
@@ -186,7 +184,6 @@ header {
   z-index: 1;
 }
 
-/* Login */
 .login-emblem {
   width: 80px;
   height: 80px;
@@ -306,7 +303,6 @@ header {
 .google-btn:hover::before { opacity: 1; }
 .google-btn:active { transform: translateY(0) scale(0.98); }
 
-/* Sheet Setup */
 #sheet-setup {
   display: none;
   padding: 24px 20px;
@@ -342,7 +338,6 @@ header {
   border: 1px solid var(--border);
 }
 
-/* Form fields */
 .field-group { margin-bottom: 16px; }
 
 label {
@@ -387,7 +382,6 @@ select {
 
 select option { background: var(--surface); }
 
-/* Buttons */
 .btn {
   width: 100%;
   background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
@@ -426,7 +420,6 @@ select option { background: var(--surface); }
   background: var(--surface2);
   color: var(--muted2);
   cursor: not-allowed;
-  transform: none;
   box-shadow: none;
 }
 
@@ -536,7 +529,7 @@ select option { background: var(--surface); }
   font-weight: 400;
 }
 
-/* Filters bar */
+/* Filters */
 .filters {
   display: flex;
   gap: 8px;
@@ -596,7 +589,6 @@ select option { background: var(--surface); }
 }
 
 .data-table tr:last-child td { border-bottom: none; }
-
 .data-table tr:hover td { background: rgba(212,169,106,0.04); }
 
 .data-table .col-num { width: 40px; color: var(--muted); font-size: 11px; }
@@ -613,11 +605,7 @@ select option { background: var(--surface); }
   background: linear-gradient(135deg, var(--surface) 0%, rgba(46,38,31,0.5) 100%);
   border: 1px solid var(--border);
   border-radius: var(--r);
-  padding: 14px 16px;
   margin-bottom: 8px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   position: relative;
   overflow: hidden;
   transition: all 0.3s ease;
@@ -634,24 +622,45 @@ select option { background: var(--surface); }
   border-radius: 3px 0 0 3px;
 }
 
-.agg-card:hover {
-  border-color: var(--border2);
-  transform: translateX(3px);
+.agg-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
-.agg-card .agg-label {
+.agg-header:hover { background: rgba(212,169,106,0.04); }
+
+.agg-header .agg-left { flex: 1; min-width: 0; }
+
+.agg-header .agg-label {
   font-size: 13px;
   font-weight: 500;
   color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.agg-card .agg-sub {
+.agg-header .agg-label .arrow {
+  font-size: 10px;
+  color: var(--muted);
+  transition: transform 0.3s ease;
+  display: inline-block;
+}
+
+.agg-card.open .agg-header .arrow { transform: rotate(90deg); }
+
+.agg-header .agg-sub {
   font-size: 11px;
   color: var(--muted);
   margin-top: 3px;
 }
 
-.agg-card .agg-value {
+.agg-header .agg-value {
   font-family: 'Cormorant Garamond', serif;
   font-size: 20px;
   font-weight: 700;
@@ -660,7 +669,7 @@ select option { background: var(--surface); }
   white-space: nowrap;
 }
 
-.agg-card .agg-value small {
+.agg-header .agg-value small {
   display: block;
   font-family: 'Manrope', sans-serif;
   font-size: 10px;
@@ -668,7 +677,6 @@ select option { background: var(--surface); }
   color: var(--muted);
 }
 
-/* Bar chart simple */
 .bar-track {
   width: 100%;
   height: 6px;
@@ -685,24 +693,47 @@ select option { background: var(--surface); }
   transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Section label */
-.section-label {
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: var(--muted);
-  margin: 24px 0 14px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-weight: 500;
+/* Expandable detail list inside agg-card */
+.agg-details {
+  display: none;
+  border-top: 1px solid var(--border);
+  padding: 0;
 }
 
-.section-label::after {
-  content: '';
+.agg-card.open .agg-details { display: block; }
+
+.agg-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 9px 16px 9px 24px;
+  font-size: 12px;
+  border-bottom: 1px solid rgba(61,50,41,0.25);
+}
+
+.agg-detail-row:last-child { border-bottom: none; }
+
+.agg-detail-row .dr-name {
+  color: var(--text2);
   flex: 1;
-  height: 1px;
-  background: linear-gradient(90deg, var(--border), transparent);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.agg-detail-row .dr-qty {
+  color: var(--accent);
+  font-weight: 600;
+  margin: 0 12px;
+  white-space: nowrap;
+  font-size: 11px;
+}
+
+.agg-detail-row .dr-cost {
+  color: var(--accent3);
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 /* Counter bar */
@@ -732,7 +763,6 @@ select option { background: var(--surface); }
 .counter-bar .sheet-link:hover { color: var(--accent); }
 .counter-bar .sheet-link svg { width: 14px; height: 14px; }
 
-/* Loading & empty */
 .loading-orb {
   width: 48px;
   height: 48px;
@@ -781,7 +811,45 @@ select option { background: var(--surface); }
   font-size: 12px;
 }
 
-/* Toast */
+.table-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  font-size: 11px;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 0 0 var(--r) var(--r);
+}
+
+.table-footer .total-sum {
+  color: var(--accent3);
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.refresh-btn {
+  font-size: 10px;
+  color: var(--accent);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 6px 12px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+}
+
+.refresh-btn:hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 12px var(--accent-glow2);
+}
+
+.refresh-btn:disabled { color: var(--muted2); cursor: not-allowed; }
+
 #toast {
   position: fixed;
   bottom: 24px;
@@ -807,59 +875,12 @@ select option { background: var(--surface); }
 #toast.success { border-color: var(--success); color: var(--success); background: linear-gradient(135deg, var(--surface2), var(--success-bg)); }
 #toast.error { border-color: var(--danger); color: var(--danger); background: linear-gradient(135deg, var(--surface2), var(--danger-bg)); }
 
-/* Page animation */
 @keyframes pageEnter {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 .page-enter { animation: pageEnter 0.6s cubic-bezier(0.4, 0, 0.2, 1) both; }
-
-@keyframes cardSlideIn {
-  from { opacity: 0; transform: translateX(-20px); }
-  to { opacity: 1; transform: translateX(0); }
-}
-
-/* Refresh button */
-.refresh-btn {
-  font-size: 10px;
-  color: var(--accent);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  cursor: pointer;
-  font-family: inherit;
-  padding: 6px 12px;
-  transition: all 0.3s ease;
-  font-weight: 500;
-  letter-spacing: 0.05em;
-}
-
-.refresh-btn:hover {
-  border-color: var(--accent);
-  box-shadow: 0 0 12px var(--accent-glow2);
-}
-
-.refresh-btn:disabled { color: var(--muted2); cursor: not-allowed; }
-
-/* Table footer */
-.table-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 16px;
-  font-size: 11px;
-  color: var(--muted);
-  border-top: 1px solid var(--border);
-  background: var(--surface);
-  border-radius: 0 0 var(--r) var(--r);
-}
-
-.table-footer .total-sum {
-  color: var(--accent3);
-  font-weight: 600;
-  font-size: 12px;
-}
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
@@ -915,7 +936,6 @@ select option { background: var(--surface); }
 </div>
 
 <div id="main-screen">
-  <!-- Top bar -->
   <div class="counter-bar">
     <span style="display:flex;align-items:center;gap:8px">
       <span id="recordCount" style="font-weight:500"></span>
@@ -927,7 +947,6 @@ select option { background: var(--surface); }
     </span>
   </div>
 
-  <!-- Summary -->
   <div class="summary-row" id="summaryCards">
     <div class="summary-card total">
       <div class="sc-label">Общая сумма</div>
@@ -947,14 +966,12 @@ select option { background: var(--surface); }
     </div>
   </div>
 
-  <!-- Tabs -->
   <div class="tabs">
     <button class="tab active" onclick="switchTab('list')">Все приходы</button>
     <button class="tab" onclick="switchTab('byDay')">По дням</button>
     <button class="tab" onclick="switchTab('byDir')">По направлениям</button>
   </div>
 
-  <!-- Tab: List -->
   <div id="tab-list">
     <div class="filters">
       <input type="search" id="searchInput" placeholder="Поиск материала..." oninput="applyFilters()">
@@ -970,12 +987,10 @@ select option { background: var(--surface); }
     </div>
   </div>
 
-  <!-- Tab: By Day -->
   <div id="tab-byDay" style="display:none">
     <div id="byDayList"></div>
   </div>
 
-  <!-- Tab: By Direction -->
   <div id="tab-byDir" style="display:none">
     <div id="byDirList"></div>
   </div>
@@ -993,9 +1008,8 @@ const DATA_ROW = 4;
 let accessToken = null;
 let sheetId = localStorage.getItem('kb_journal_sheet_id') || '';
 let tokenClient = null;
-let allData = []; // parsed rows
+let allData = [];
 
-/* ── Init ── */
 window.onload = () => {
   const check = setInterval(() => {
     if (window.google && google.accounts) {
@@ -1061,7 +1075,6 @@ function goBack() {
 
 function openSheet() { if(sheetId) window.open(`https://docs.google.com/spreadsheets/d/${sheetId}/edit`, '_blank'); }
 
-/* ── Sheets API ── */
 async function sheetsGet(range) {
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${encodeURIComponent(range)}`;
   const r = await fetch(url, {headers:{Authorization:'Bearer '+accessToken}});
@@ -1069,7 +1082,15 @@ async function sheetsGet(range) {
   return r.json();
 }
 
-/* ── Load all data ── */
+/* ── Parse number: handles "13 000", "13000", "13,000" etc ── */
+function parseNum(val) {
+  if (val === undefined || val === null || val === '') return 0;
+  // Remove all spaces, non-breaking spaces, and replace comma with dot
+  const cleaned = String(val).replace(/[\s\u00A0\u202F]/g, '').replace(',', '.');
+  const n = parseFloat(cleaned);
+  return isNaN(n) ? 0 : n;
+}
+
 async function loadAllData() {
   const btn = document.getElementById('refreshBtn');
   btn.disabled = true;
@@ -1094,7 +1115,7 @@ async function loadAllData() {
         contractor: r[6] || '',
         invoice: r[7] || '',
         direction: r[8] || '',
-        cost: parseFloat(r[9]) || 0,
+        cost: parseNum(r[9]),
         note: r[10] || '',
       });
     }
@@ -1117,16 +1138,10 @@ async function loadAllData() {
   btn.textContent = 'Обновить';
 }
 
-/* ── Filters ── */
 function buildFilters() {
   const dirs = [...new Set(allData.map(r => r.direction).filter(Boolean))].sort();
   const dates = [...new Set(allData.map(r => r.date).filter(Boolean))];
-  // Sort dates in reverse (newest first)
-  dates.sort((a, b) => {
-    const pa = parseDateStr(a);
-    const pb = parseDateStr(b);
-    return pb - pa;
-  });
+  dates.sort((a, b) => parseDateStr(b) - parseDateStr(a));
 
   const dirSel = document.getElementById('filterDir');
   dirSel.innerHTML = '<option value="">Все направления</option>' +
@@ -1138,12 +1153,9 @@ function buildFilters() {
 }
 
 function parseDateStr(s) {
-  // "04.03.2026" → Date
   if (!s) return new Date(0);
   const parts = s.split('.');
-  if (parts.length === 3) {
-    return new Date(+parts[2], +parts[1]-1, +parts[0]);
-  }
+  if (parts.length === 3) return new Date(+parts[2], +parts[1]-1, +parts[0]);
   return new Date(s);
 }
 
@@ -1151,8 +1163,7 @@ function getTodayStr() {
   const d = new Date();
   const dd = String(d.getDate()).padStart(2,'0');
   const mm = String(d.getMonth()+1).padStart(2,'0');
-  const yy = d.getFullYear();
-  return `${dd}.${mm}.${yy}`;
+  return `${dd}.${mm}.${d.getFullYear()}`;
 }
 
 function applyFilters() {
@@ -1161,7 +1172,6 @@ function applyFilters() {
   const date = document.getElementById('filterDate').value;
 
   let filtered = allData;
-
   if (search) {
     filtered = filtered.filter(r =>
       r.name.toLowerCase().includes(search) ||
@@ -1170,35 +1180,25 @@ function applyFilters() {
       r.note.toLowerCase().includes(search)
     );
   }
-
   if (dir) filtered = filtered.filter(r => r.direction === dir);
   if (date) filtered = filtered.filter(r => r.date === date);
 
   renderTable(filtered);
 }
 
-/* ── Render table ── */
 function renderTable(rows) {
   if (!rows.length) {
     document.getElementById('tableWrap').innerHTML = '<div class="empty-state">Нет данных по выбранным фильтрам</div>';
     return;
   }
 
-  // Reverse so newest first
   const sorted = [...rows].reverse();
-
   const totalCost = rows.reduce((s, r) => s + r.cost, 0);
 
   let html = `<div class="data-table-wrap"><table class="data-table">
     <thead><tr>
-      <th>№</th>
-      <th>Дата</th>
-      <th>Материал</th>
-      <th>Кол-во</th>
-      <th>Направление</th>
-      <th>Поставщик</th>
-      <th>Подрядчик</th>
-      <th>Стоимость</th>
+      <th>№</th><th>Дата</th><th>Материал</th><th>Кол-во</th>
+      <th>Направление</th><th>Поставщик</th><th>Подрядчик</th><th>Стоимость</th>
     </tr></thead><tbody>`;
 
   for (const r of sorted) {
@@ -1223,14 +1223,11 @@ function renderTable(rows) {
   document.getElementById('tableWrap').innerHTML = html;
 }
 
-/* ── Summary cards ── */
 function buildSummary() {
   const total = allData.reduce((s, r) => s + r.cost, 0);
   const count = allData.length;
-
   const todayStr = getTodayStr();
   const todaySum = allData.filter(r => r.date === todayStr).reduce((s, r) => s + r.cost, 0);
-
   const dates = [...new Set(allData.map(r => r.date).filter(Boolean))];
   const avg = dates.length > 0 ? total / dates.length : 0;
 
@@ -1240,19 +1237,18 @@ function buildSummary() {
   document.getElementById('sumAvg').innerHTML = fmt(Math.round(avg)) + ' <small>тг</small>';
 }
 
-/* ── By Day ── */
+/* ── By Day — with expandable details ── */
 function buildByDay() {
   const byDay = {};
   for (const r of allData) {
     if (!r.date) continue;
-    if (!byDay[r.date]) byDay[r.date] = { cost: 0, count: 0 };
+    if (!byDay[r.date]) byDay[r.date] = { cost: 0, count: 0, items: [] };
     byDay[r.date].cost += r.cost;
     byDay[r.date].count++;
+    byDay[r.date].items.push(r);
   }
 
-  const days = Object.entries(byDay).sort((a, b) => {
-    return parseDateStr(b[0]) - parseDateStr(a[0]);
-  });
+  const days = Object.entries(byDay).sort((a, b) => parseDateStr(b[0]) - parseDateStr(a[0]));
 
   if (!days.length) {
     document.getElementById('byDayList').innerHTML = '<div class="empty-state">Нет данных</div>';
@@ -1262,29 +1258,45 @@ function buildByDay() {
   const maxCost = Math.max(...days.map(d => d[1].cost));
 
   let html = '';
-  for (const [date, info] of days) {
+  for (let i = 0; i < days.length; i++) {
+    const [date, info] = days[i];
     const pct = maxCost > 0 ? (info.cost / maxCost * 100) : 0;
-    html += `<div class="agg-card" style="animation: cardSlideIn 0.5s ease both">
-      <div>
-        <div class="agg-label">${date}</div>
-        <div class="agg-sub">${info.count} позиций</div>
-        <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+    const id = 'day_' + i;
+
+    let detailsHtml = '';
+    for (const item of info.items) {
+      detailsHtml += `<div class="agg-detail-row">
+        <span class="dr-name">${esc(item.name)}</span>
+        <span class="dr-qty">${item.qty} ${esc(item.unit)}</span>
+        <span class="dr-cost">${item.cost ? fmt(item.cost) + ' тг' : '—'}</span>
+      </div>`;
+    }
+
+    html += `<div class="agg-card" id="${id}">
+      <div class="agg-header" onclick="toggleCard('${id}')">
+        <div class="agg-left">
+          <div class="agg-label"><span class="arrow">▶</span> ${date}</div>
+          <div class="agg-sub">${info.count} позиций</div>
+          <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+        </div>
+        <div class="agg-value">${fmt(info.cost)}<small>тг</small></div>
       </div>
-      <div class="agg-value">${fmt(info.cost)}<small>тг</small></div>
+      <div class="agg-details">${detailsHtml}</div>
     </div>`;
   }
 
   document.getElementById('byDayList').innerHTML = html;
 }
 
-/* ── By Direction ── */
+/* ── By Direction — with expandable details ── */
 function buildByDir() {
   const byDir = {};
   for (const r of allData) {
     if (!r.direction) continue;
-    if (!byDir[r.direction]) byDir[r.direction] = { cost: 0, count: 0 };
+    if (!byDir[r.direction]) byDir[r.direction] = { cost: 0, count: 0, items: [] };
     byDir[r.direction].cost += r.cost;
     byDir[r.direction].count++;
+    byDir[r.direction].items.push(r);
   }
 
   const dirs = Object.entries(byDir).sort((a, b) => b[1].cost - a[1].cost);
@@ -1298,23 +1310,41 @@ function buildByDir() {
   const totalCost = dirs.reduce((s, d) => s + d[1].cost, 0);
 
   let html = '';
-  for (const [dir, info] of dirs) {
+  for (let i = 0; i < dirs.length; i++) {
+    const [dir, info] = dirs[i];
     const pct = maxCost > 0 ? (info.cost / maxCost * 100) : 0;
     const share = totalCost > 0 ? (info.cost / totalCost * 100).toFixed(1) : 0;
-    html += `<div class="agg-card" style="animation: cardSlideIn 0.5s ease both">
-      <div style="flex:1;min-width:0">
-        <div class="agg-label">${esc(dir)}</div>
-        <div class="agg-sub">${info.count} позиций · ${share}%</div>
-        <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+    const id = 'dir_' + i;
+
+    let detailsHtml = '';
+    for (const item of info.items) {
+      detailsHtml += `<div class="agg-detail-row">
+        <span class="dr-name">${esc(item.name)}</span>
+        <span class="dr-qty">${item.qty} ${esc(item.unit)}</span>
+        <span class="dr-cost">${item.cost ? fmt(item.cost) + ' тг' : '—'}</span>
+      </div>`;
+    }
+
+    html += `<div class="agg-card" id="${id}">
+      <div class="agg-header" onclick="toggleCard('${id}')">
+        <div class="agg-left">
+          <div class="agg-label"><span class="arrow">▶</span> ${esc(dir)}</div>
+          <div class="agg-sub">${info.count} позиций · ${share}%</div>
+          <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+        </div>
+        <div class="agg-value">${fmt(info.cost)}<small>тг</small></div>
       </div>
-      <div class="agg-value">${fmt(info.cost)}<small>тг</small></div>
+      <div class="agg-details">${detailsHtml}</div>
     </div>`;
   }
 
   document.getElementById('byDirList').innerHTML = html;
 }
 
-/* ── Tabs ── */
+function toggleCard(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+
 function switchTab(name) {
   document.querySelectorAll('.tab').forEach((t, i) => {
     const names = ['list', 'byDay', 'byDir'];
@@ -1325,34 +1355,20 @@ function switchTab(name) {
   document.getElementById('tab-byDir').style.display = name === 'byDir' ? '' : 'none';
 }
 
-/* ── Navigation ── */
 function showScreen(name) {
   document.getElementById('loading-screen').style.display = 'none';
   document.getElementById('login-screen').style.display = name === 'login' ? 'flex' : 'none';
   document.getElementById('sheet-setup').style.display = name === 'sheet-setup' ? 'block' : 'none';
   document.getElementById('main-screen').style.display = name === 'main' ? 'block' : 'none';
-  if (name === 'sheet-setup') {
-    document.getElementById('sheetIdInput').value = sheetId || '';
-  }
+  if (name === 'sheet-setup') document.getElementById('sheetIdInput').value = sheetId || '';
   const screens = { login:'login-screen', 'sheet-setup':'sheet-setup', main:'main-screen' };
   const el = document.getElementById(screens[name]);
-  if (el) {
-    el.classList.remove('page-enter');
-    void el.offsetWidth;
-    el.classList.add('page-enter');
-  }
+  if (el) { el.classList.remove('page-enter'); void el.offsetWidth; el.classList.add('page-enter'); }
 }
 
-/* ── Utils ── */
-function fmt(n) {
-  return Math.round(n).toLocaleString('ru-RU');
-}
+function fmt(n) { return Math.round(n).toLocaleString('ru-RU'); }
 
-function esc(s) {
-  const d = document.createElement('div');
-  d.textContent = s;
-  return d.innerHTML;
-}
+function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
 
 function toast(msg, type='') {
   const el = document.getElementById('toast');
